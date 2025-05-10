@@ -10,4 +10,4 @@ class ExerciseLang(Enum):
 class ExerciseTag(Enum):
     """Теги для упражнения"""
 
-    TIMIT = "TIMTI"
+    TIMIT = "TIMIT"
