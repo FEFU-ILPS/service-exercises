@@ -13,11 +13,11 @@ class Exercise(BaseORM):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     seq_number = Column(Integer, primary_key=True, autoincrement=True)
     difficulty = Column(Integer, nullable=False, default=0)
-    tags = Column(ARRAY(Enum(ExerciseTag)), nullable=False, default=[])
     preview_image = Column(String(500), nullable=True, default=None)
     background_image = Column(String(500), nullable=True, default=None)
     text_id = Column(UUID(as_uuid=True), nullable=False)
     lang = Column(Enum(ExerciseLang), nullable=False, default=ExerciseLang.ENGLISH)
+    tags = Column(ARRAY(Enum(ExerciseTag)), nullable=False, default=[])
 
     __table_args__ = (
         CheckConstraint(difficulty >= 0, name="check_difficulty_non_neg"),
