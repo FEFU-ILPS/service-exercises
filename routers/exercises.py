@@ -34,7 +34,7 @@ async def get_exercises(
     exercises = result.scalars().all()
 
     stmt = select(func.count()).select_from(Exercise)
-    result = await db.execute()
+    result = await db.execute(stmt)
     total = result.scalar_one()
 
     items = [ExerciseResponse.model_validate(exercise) for exercise in exercises]
