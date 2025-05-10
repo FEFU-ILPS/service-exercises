@@ -1,1 +1,25 @@
+import uuid
+
+from sqlalchemy import Column, String, Integer, CheckConstraint, Enum, ARRAY
+from sqlalchemy.dialects.postgresql import UUID
+
 from .engine import BaseORM
+from .types import ExerciseLang, ExerciseTag
+
+
+class Exercise(BaseORM):
+    __tablename__ = "exercises"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    seq_number = Column(Integer, primary_key=True, autoincrement=True)
+    difficulty = Column(Integer, nullable=False, default=0)
+    tags = Column(ARRAY(Enum(ExerciseTag)), nullable=False, default=[])
+    preview_image = Column(String(500), nullable=True, default=None)
+    background_image = Column(String(500), nullable=True, default=None)
+    text_id = Column(UUID(as_uuid=True), nullable=False)
+    lang = Column(Enum(ExerciseLang), nullable=False, default=ExerciseLang.ENGLISH)
+
+    __table_args__ = (
+        CheckConstraint(difficulty >= 0, name="check_difficulty_non_neg"),
+        CheckConstraint(seq_number > 0, name="check_seq_number_natural"),
+    )
