@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String, Integer, CheckConstraint, Enum, ARRAY
+from sqlalchemy import ARRAY, CheckConstraint, Column, Enum, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 
 from .engine import BaseORM

@@ -1,9 +1,9 @@
 from .schemas import (
-    ExerciseResponse,
-    DetailExerciseResponse,
-    CreateExerciseResponse,
     CreateExerciseRequest,
+    CreateExerciseResponse,
     DeleteExerciseResponse,
+    DetailExerciseResponse,
+    ExerciseResponse,
     UpdateExerciseRequest,
     UpdateExerciseResponse,
 )

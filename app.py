@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from database import disconnect_db
-from routers import health_router, exercises_router
+from routers import exercises_router, health_router
 
 
 @asynccontextmanager

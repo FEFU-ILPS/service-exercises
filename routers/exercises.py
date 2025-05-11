@@ -9,11 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from database.models import Exercise
 from schemas import (
-    DetailExerciseResponse,
-    ExerciseResponse,
     CreateExerciseRequest,
     CreateExerciseResponse,
     DeleteExerciseResponse,
+    DetailExerciseResponse,
+    ExerciseResponse,
     UpdateExerciseRequest,
     UpdateExerciseResponse,
 )
