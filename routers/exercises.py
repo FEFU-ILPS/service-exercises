@@ -75,6 +75,7 @@ async def create_text(
 
     try:
         exercise = Exercise(
+            title=data.title,
             difficulty=data.difficulty,
             tags=data.tags,
             text_id=data.text_id,

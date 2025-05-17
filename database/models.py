@@ -13,6 +13,7 @@ class Exercise(BaseORM):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     seq_number = Column(Integer, primary_key=True, autoincrement=True)
     difficulty = Column(Integer, nullable=False, default=0)
+    title = Column(String(50), nullable=False, default="Обычное упражнение")
     preview_image = Column(String(500), nullable=True, default=None)
     background_image = Column(String(500), nullable=True, default=None)
     text_id = Column(UUID(as_uuid=True), nullable=False)
