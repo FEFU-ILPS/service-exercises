@@ -3,41 +3,36 @@ ID_EXAMPLES = [
     "3d5dc460-5db7-4dd0-9d4e-3cd825ebaebd",
 ]
 
-STATUS_EXAMPLES = [
-    "created",
-    "started",
-    "preprocessing",
-    "transcribing",
-    "completed",
-    "failed",
-    "unknown",
+TAGS_EXAMPLES = [
+    "TIMIT",
+    "English",
+    "Small sentence",
 ]
 
-RESULT_EXAMPLES = [
-    "Dɑːɹk hæd hæd jɚ jɚ ʃi suːt suːt ʃi hæd jɚ jɚ ʃi",
-    "hæd suːt jɚ jɚ ʃi dɑːɹk ʃi hæd ʃi dɑːɹk ʃi hæd hæd hæd suːt jɚ suːt",
+LANG_EXAMPLES = [
+    "English",
+    "Chinise",
+    "Russian",
 ]
 
-ACCURACY_EXAMPLES = [
-    90.0,
-    22.0,
-    0.02,
-    74.01,
+IMAGE_EXAMPLES = [
+    "https://example.com/images/slava_merlo.png",
+    "https://example.com/images/putin.png",
+    "https://example.com/images/baiden_loh.png",
 ]
 
-MISTAKES_EXAMPLES = [
-    [
-        {"position": 6, "reference": "ɔːɹ", "actual": "oʊ", "type": "Replacement"},
-        {"position": 14, "reference": "n", "actual": None, "type": "Deletion"},
-        {"position": 18, "reference": "z", "actual": "s", "type": "Replacement"},
-        {"position": 20, "reference": "w", "actual": None, "type": "Deletion"},
-        {"position": 21, "reference": "ɑː", "actual": "oʊ", "type": "Replacement"},
-        {"position": 28, "reference": "l", "actual": None, "type": "Deletion"},
-        {"position": 30, "reference": "ɪɹ", "actual": "iː", "type": "Replacement"},
-    ]
+DIFFICYLTY_EXAMPLES = [
+    1,
+    2,
+    3,
+    4,
+    5,
 ]
 
-COMMENTS_EXAMPLES = [
-    "No comment.",
-    "Completed manualy.",
+SEQ_NUMBER_EXAMPLES = DIFFICYLTY_EXAMPLES
+
+TITLE_EXAMPLES = [
+    "Произношение A",
+    "Комплексное произношение R",
+    "Детальное произношение G",
 ]
