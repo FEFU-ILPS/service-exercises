@@ -17,6 +17,7 @@ from schemas import (
     UpdateExerciseRequest,
     UpdateExerciseResponse,
 )
+from service_logging import logger
 
 from .utils.pagination import PaginatedResponse, Pagination
 
@@ -29,6 +30,7 @@ async def get_exercises(
     db: AsyncSession = Depends(get_db),
 ) -> PaginatedResponse[ExerciseResponse]:
     """Постранично возвращает список всех обучающих упражнений."""
+    logger.info("Getting the exercise list...")
     stmt = select(Exercise).offset(pg.skip).limit(pg.size)
     result = await db.execute(stmt)
     exercises = result.scalars().all()
@@ -38,6 +40,7 @@ async def get_exercises(
     total = result.scalar_one()
 
     items = [ExerciseResponse.model_validate(exercise) for exercise in exercises]
+    logger.success(f"Received {len(items)} exercises.")
 
     return PaginatedResponse[ExerciseResponse](
         items=items,
@@ -53,17 +56,23 @@ async def get_exercise(
     db: AsyncSession = Depends(get_db),
 ) -> DetailExerciseResponse:
     """Возвращает полную информацию о конкретном упражнении по его UUID."""
+    logger.info("Getting information about an exercise...")
     stmt = select(Exercise).where(Exercise.id == uuid)
     result = await db.execute(stmt)
     exercise = result.scalar_one_or_none()
 
     if exercise is None:
+        detail = "Exercise not found."
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Exercise not found.",
+            detail=detail,
         )
 
-    return DetailExerciseResponse.model_validate(exercise)
+    item = DetailExerciseResponse.model_validate(exercise)
+    logger.success(f"Exercise received: ({item.seq_number}){item.id}")
+
+    return item
 
 
 @router.post("/", summary="Добавить упражнение в систему")
@@ -73,6 +82,7 @@ async def create_text(
 ) -> CreateExerciseResponse:
     """Добавляет новое упражнение в систему."""
 
+    logger.info("Creating an exercise...")
     try:
         exercise = Exercise(
             title=data.title,
@@ -86,19 +96,26 @@ async def create_text(
 
     except IntegrityError:
         await db.rollback()
+        detail = "Exercise with this data already exists."
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Exercise with this data already exists.",
+            detail=detail,
         )
 
-    except Exception:
+    except Exception as error:
         await db.rollback()
+        detail = f"An error ocured while creating exercise: {error}"
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error ocured while creating exercise.",
+            detail=detail,
         )
 
-    return CreateExerciseResponse.model_validate(exercise)
+    item = CreateExerciseResponse.model_validate(exercise)
+    logger.success(f"Exercise has been created: ({item.seq_number}){item.id}")
+
+    return item
 
 
 @router.delete("/{uuid}", summary="Удалить упражнение из системы")
@@ -107,20 +124,26 @@ async def delete_text(
     db: AsyncSession = Depends(get_db),
 ) -> DeleteExerciseResponse:
     """Удаляет упражнение из системы по его UUID."""
+    logger.info("Deleting an exercise...")
     stmt = select(Exercise).where(Exercise.id == uuid)
     result = await db.execute(stmt)
     exercise = result.scalar_one_or_none()
 
     if exercise is None:
+        detail = "Exercise not found."
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Exercise not found.",
+            detail=detail,
         )
 
     await db.delete(exercise)
     await db.commit()
 
-    return DeleteExerciseResponse.model_validate(exercise)
+    item = DeleteExerciseResponse.model_validate(exercise)
+    logger.success(f"Exercise has been deleted: ({item.seq_number}){item.id}")
+
+    return item
 
 
 @router.patch("/{uuid}", summary="Обновить данные об упражнении")
@@ -130,11 +153,14 @@ async def update_text(
     db: AsyncSession = Depends(get_db),
 ) -> UpdateExerciseResponse:
     """Обновляет данные упражнения по его UUID."""
+    logger.info("Updating an exercise...")
     stmt = select(Exercise).where(Exercise.id == uuid)
     result = await db.execute(stmt)
     exercise = result.scalar_one_or_none()
 
     if exercise is None:
+        detail = "Exercise not found."
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Exercise not found.",
@@ -151,16 +177,22 @@ async def update_text(
 
     except IntegrityError:
         await db.rollback()
+        detail = "Exercise with this data already exists."
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Exercise with this data already exists.",
+            detail=detail,
         )
 
-    except Exception:
+    except Exception as error:
         await db.rollback()
+        detail = f"An error ocured while updating exercise: {error}"
+        logger.error(detail)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error ocured while updating exercise.",
+            detail=detail,
         )
+    item = UpdateExerciseResponse.model_validate(exercise)
+    logger.success(f"Exercise has been updated: ({item.seq_number}){item.id}")
 
-    return UpdateExerciseResponse.model_validate(exercise)
+    return item
